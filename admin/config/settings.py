@@ -117,6 +117,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+LOGIN_REDIRECT_URL = 'event_list'
+LOGOUT_REDIRECT_URL = 'login'
+
+TEMPLATES[0]['DIRS'] = [BASE_DIR / 'templates']
+
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
