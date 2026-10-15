@@ -18,6 +18,7 @@
     <p><a href="{% url 'event_update' event.pk %}">Редактировать</a></p>
 
     <h2>Участники</h2>
+    <p><a href="{% url 'event_export' event.pk %}">Скачать участников в формате csv</a></p>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr><th>Имя</th><th>Email</th><th>Статус</th></tr>

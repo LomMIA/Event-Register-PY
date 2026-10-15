@@ -1,13 +1,15 @@
+import csv
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 
 from .forms import EventForm
 from .models import Event
-
 
 
 @login_required
@@ -30,6 +32,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
         form.instance.organizer = self.request.user
         return super().form_valid(form)
 
+
 class EventUpdateView(LoginRequiredMixin, UpdateView):
     form_class = EventForm
     template_name = 'events/event_form.html'
@@ -43,3 +46,25 @@ class EventDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Event.objects.filter(organizer=self.request.user)
+
+
+@login_required
+def event_export_csv(request, pk):
+    event = get_object_or_404(Event, pk=pk, organizer=request.user)
+
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="event_{event.pk}_participants.csv"'
+    response.write('\ufeff')
+
+    writer = csv.writer(response, delimiter=';')
+    writer.writerow(['Имя', 'Email', 'Статус', 'Дата регистрации'])
+
+    for reg in event.registrations.all():
+        writer.writerow([
+            reg.name,
+            reg.email,
+            reg.get_status_display(),
+            reg.created_at.strftime('%d.%m.%Y %H:%M'),
+        ])
+
+    return response
