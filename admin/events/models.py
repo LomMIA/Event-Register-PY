@@ -18,7 +18,6 @@ class Event(models.Model):
     status = models.CharField(max_length=200, choices=Status.choices, default=Status.DRAFT)
     organizer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='events')
     created_at = models.DateTimeField(auto_now_add=True)
-    code = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     class Meta:
         ordering = ['starts_at']
