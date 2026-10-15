@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 from django.conf import settings
-
+from django.urls import reverse
 
 class Event(models.Model):
     class Status(models.TextChoices):
@@ -24,6 +24,9 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('event_detail', args=[self.pk])
 
 class Registration(models.Model):
     class Status(models.TextChoices):

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.name }}{% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'event_list' %}">← Мои мероприятия</a></p>
+
+    <h1>{{ event.name }}</h1>
+    <p>
+        {{ event.starts_at|date:"d.m.Y H:i" }} · {{ event.location }} · {{ event.get_status_display }}
+    </p>
+    <p><strong>Занято {{ event.registrations.count }} из {{ event.capacity }} мест</strong></p>
+
+    {% if event.description %}
+        <p>{{ event.description|linebreaksbr }}</p>
+    {% endif %}
+
+    <p><a href="{% url 'event_update' event.pk %}">Редактировать</a></p>
+
+    <h2>Участники</h2>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr><th>Имя</th><th>Email</th><th>Статус</th></tr>
+        </thead>
+        <tbody>
+            {% for reg in event.registrations.all %}
+                <tr>
+                    <td>{{ reg.name }}</td>
+                    <td>{{ reg.email }}</td>
+                    <td>{{ reg.get_status_display }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="3">Пока никто не зарегистрировался.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
