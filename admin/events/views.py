@@ -40,7 +40,7 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
 
 class EventDetailView(LoginRequiredMixin, DetailView):
     form_class = EventForm
-    template_name = 'events/event_form.html'
+    template_name = 'events/event_detail.html'
 
     def get_queryset(self):
         return Event.objects.filter(organizer=self.request.user)
