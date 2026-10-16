@@ -12,3 +12,7 @@ class EventOut(BaseModel):
     starts_at: datetime
     location: str
     capacity: int
+
+
+class EventDetailOut(EventOut):
+    free_places: int
